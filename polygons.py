@@ -1,15 +1,17 @@
 import math
 from abc import ABC, abstractmethod
 from params import Length, Colour, Ratio, Angle, MathHelpers
+from gui import GUI
 
 class ConvexPolygon(ABC):
 
-    fill_colour = Colour(initial="#ffffff", name="Fill colour")
-    outline_colour = Colour(initial="#000000", name="Outline colour")
+    fill_colour = Colour(name="Fill colour")
+    outline_colour = Colour(name="Outline colour")
 
     @abstractmethod
     def __init__(self):
-        pass
+        self.fill_colour = "white"
+        self.outline_colour = "black"
 
     @abstractmethod
     def area(self):
@@ -49,6 +51,10 @@ class Triangle(ConvexPolygon):
         return self.len_base + side_b + side_c
 
     def draw(self, scale=1):
+        scaled_base = self.len_base * scale
+        scaled_height = self.len_height * scale
+        coords = [(0, 0), (scaled_base, 0), (self.ratio_h_div * scaled_base, scaled_height)]
+        GUI.draw_polygon(self, coords, self.fill_colour, self.outline_colour, scale)
         pass
 
 class ConvexQuadrilateral(ConvexPolygon):
