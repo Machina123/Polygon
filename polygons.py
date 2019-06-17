@@ -4,9 +4,12 @@ from params import Length, Colour, Ratio, Angle, MathHelpers
 
 class ConvexPolygon(ABC):
 
+    fill_colour = Colour(initial="#ffffff", name="Fill colour")
+    outline_colour = Colour(initial="#000000", name="Outline colour")
+
+    @abstractmethod
     def __init__(self):
-        self.fill_colour = Colour(initial="#ffffff", name="Fill colour")
-        self.outline_colour = Colour(initial="#000000", name="Outline colour")
+        pass
 
     @abstractmethod
     def area(self):
@@ -27,11 +30,12 @@ class ConvexPolygon(ABC):
         self.outline_colour = colour
 
 class Triangle(ConvexPolygon):
+    len_base = Length(name="Length of base")
+    len_height = Length(name="Height of triangle")
+    ratio_h_div = Ratio(name="Ratio of base intersection with height")
+
     def __init__(self, len_base, len_height, ratio_h_div):
         super().__init__()
-        self.len_base = Length(name="Length of base")
-        self.len_height = Length(name="Height of triangle")
-        self.ratio_h_div = Ratio(name="Ratio of base intersection with height")
         self.len_base = len_base
         self.len_height = len_height
         self.ratio_h_div = ratio_h_div
@@ -44,14 +48,18 @@ class Triangle(ConvexPolygon):
         side_c = math.sqrt(((self.len_base * (1 - self.ratio_h_div)) ** 2) + (self.len_height ** 2))
         return self.len_base + side_b + side_c
 
+    def draw(self, scale=1):
+        pass
+
 class ConvexQuadrilateral(ConvexPolygon):
+    len_diag1 = Length(name="Length of first diagonal")
+    len_diag2 = Length(name="Length of second diagonal")
+    ratio_intersect_diag1 = Ratio(name="Ratio of diagonals intersection (for 1st diag.)")
+    ratio_intersect_diag2 = Ratio(name="Ratio of diagonals intersection (for 2nd diag.)")
+    angle_btwn_diagonals = Angle(name="Angle between diagonals")
+
     def __init__(self, len_diag1, len_diag2, ratio_intersect_diag1, ratio_intersect_diag2, angle_btwn_diagonals):
         super().__init__()
-        self.len_diag1 = Length(name="Length of first diagonal")
-        self.len_diag2 = Length(name="Length of second diagonal")
-        self.ratio_intersect_diag1 = Ratio(name="Ratio of diagonals intersection (for 1st diag.)")
-        self.ratio_intersect_diag2 = Ratio(name="Ratio of diagonals intersection (for 2nd diag.)")
-        self.angle_btwn_diagonals = Angle(name="Angle between diagonals")
         self.len_diag1 = len_diag1
         self.len_diag2 = len_diag2
         self.ratio_intersect_diag1 = ratio_intersect_diag1
@@ -81,9 +89,9 @@ class ConvexQuadrilateral(ConvexPolygon):
         return side_a + side_b + side_c + side_d
 
 class RegularPentagon(ConvexPolygon):
+    side = Length(name="Side of regular pentagon")
     def __init__(self, side):
         super().__init__()
-        self.side = Length(name="Side of regular pentagon")
         self.side = side
 
     def area(self):
@@ -93,9 +101,10 @@ class RegularPentagon(ConvexPolygon):
         return 5 * self.side
 
 class RegularHexagon(ConvexPolygon):
+    side = Length(name="Side of regular hexagon")
+
     def __init__(self, side):
         super().__init__()
-        self.side = Length(name="Side of regular hexagon")
         self.side = side
 
     def area(self):
@@ -105,9 +114,10 @@ class RegularHexagon(ConvexPolygon):
         return 6 * self.side
 
 class RegularOctagon(ConvexPolygon):
+    side = Length(name="Side of regular octagon")
+
     def __init__(self, side):
         super().__init__()
-        self.side = Length(name="Side of regular octagon")
         self.side = side
 
     def area(self):
