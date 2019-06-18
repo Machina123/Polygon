@@ -166,6 +166,14 @@ class RegularOctagon(ConvexPolygon):
     def perimeter(self):
         return 8 * self.side
 
+    def draw(self, scale=1):
+        scaled_side = self.side * scale
+        circumcircle_radius = scaled_side * math.sqrt((2+math.sqrt(2))/2)
+        points = list()
+        for i in range(8):
+            points.append(GUI.get_rotated_point(circumcircle_radius, 0, i * 0.25 * math.pi))
+        GUI.draw_polygon(self, points, scale)
+
 
 class IsoscelesTriangle(Triangle):
     def __init__(self, len_base, len_height):

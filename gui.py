@@ -32,12 +32,6 @@ class GUI:
                 rotated_coords.append(GUI.get_rotated_point(rotated_point[0], rotated_point[1], math.pi/4))
             else:
                 rotated_coords.append(rotated_point)
-
-        canvas.create_text(10, 10, text=f"Figura: {poly_cls.__class__.__name__}", anchor="nw")
-        canvas.create_text(10, 25, text=f"Pole figury: {poly_cls.area()}", anchor="nw")
-        canvas.create_text(10, 40, text=f"Obwód figury: {poly_cls.perimeter()}", anchor="nw")
-        canvas.create_text(10, 55, text=f"Skala rysunku: {str(scale)}", anchor="nw")
-
         canvas.create_polygon(rotated_coords, tag="polygon", fill=poly_cls.fill_colour,
                               outline=poly_cls.outline_colour)
 
@@ -47,4 +41,10 @@ class GUI:
             canvas.move("polygon", (x2-x1)/2, (y2-y1)/2)
         c_center_x, c_center_y = constants.WINDOW_WIDTH//2, constants.WINDOW_HEIGHT//2
         canvas.move("polygon", c_center_x, c_center_y)
+
+        canvas.create_text(10, 10, text=f"Figura: {poly_cls.__class__.__name__}", anchor="nw")
+        canvas.create_text(10, 25, text=f"Pole figury: {poly_cls.area()}", anchor="nw")
+        canvas.create_text(10, 40, text=f"Obwód figury: {poly_cls.perimeter()}", anchor="nw")
+        canvas.create_text(10, 55, text=f"Skala rysunku: {str(scale)}", anchor="nw")
+
         tk.mainloop()
