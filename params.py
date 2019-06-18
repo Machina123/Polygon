@@ -17,8 +17,8 @@ class Length:
     def __set__(self, instance, value):
         if not isinstance(value, numbers.Real):
             raise TypeError(f"{self.name} is expected to be of type Real, {type(value)} given")
-        elif value < 0:
-            raise ValueError(f"{self.name} is expected to be non-negative real number, {value} given")
+        elif value <= 0:
+            raise ValueError(f"{self.name} is expected to be positive real number, {value} given")
         self.val = value
 
 
@@ -80,5 +80,5 @@ class Ratio:
 class MathHelpers:
 
     @staticmethod
-    def cosine_theorem(a, b, phi):
+    def cosine_law(a, b, phi):
         return math.sqrt(a**2 + b**2 - 2*a*b*math.cos(phi))

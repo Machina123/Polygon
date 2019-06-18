@@ -77,21 +77,19 @@ class ConvexQuadrilateral(ConvexPolygon):
         return 0.5 * self.len_diag1 * self.len_diag2 * math.sin(self.angle_btwn_diagonals)
 
     def perimeter(self):
-        side_a = MathHelpers.cosine_theorem(self.len_diag1 * self.ratio_intersect_diag1,
-                                            self.len_diag2 * self.ratio_intersect_diag2,
-                                            self.angle_btwn_diagonals)
+        side_a = MathHelpers.cosine_law(self.len_diag1 * self.ratio_intersect_diag1,
+                                        self.len_diag2 * self.ratio_intersect_diag2, self.angle_btwn_diagonals)
 
-        side_b = MathHelpers.cosine_theorem(self.len_diag1 * (1 - self.ratio_intersect_diag1),
-                                            self.len_diag2 * self.ratio_intersect_diag2,
-                                            math.pi - self.angle_btwn_diagonals)
+        side_b = MathHelpers.cosine_law(self.len_diag1 * (1 - self.ratio_intersect_diag1),
+                                        self.len_diag2 * self.ratio_intersect_diag2,
+                                        math.pi - self.angle_btwn_diagonals)
 
-        side_c = MathHelpers.cosine_theorem(self.len_diag1 * self.ratio_intersect_diag1,
-                                            self.len_diag2 * (1 - self.ratio_intersect_diag2),
-                                            self.angle_btwn_diagonals)
+        side_c = MathHelpers.cosine_law(self.len_diag1 * self.ratio_intersect_diag1,
+                                        self.len_diag2 * (1 - self.ratio_intersect_diag2), self.angle_btwn_diagonals)
 
-        side_d = MathHelpers.cosine_theorem(self.len_diag1 * (1 - self.ratio_intersect_diag1),
-                                            self.len_diag2 * (1 - self.ratio_intersect_diag2),
-                                            math.pi - self.angle_btwn_diagonals)
+        side_d = MathHelpers.cosine_law(self.len_diag1 * (1 - self.ratio_intersect_diag1),
+                                        self.len_diag2 * (1 - self.ratio_intersect_diag2),
+                                        math.pi - self.angle_btwn_diagonals)
 
         return side_a + side_b + side_c + side_d
 
