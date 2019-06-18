@@ -2,6 +2,7 @@ import math
 from abc import ABC, abstractmethod
 from params import Length, Colour, Ratio, Angle, MathHelpers
 from gui import GUI
+import constants
 
 class ConvexPolygon(ABC):
 
@@ -54,7 +55,7 @@ class Triangle(ConvexPolygon):
         scaled_base = self.len_base * scale
         scaled_height = self.len_height * scale
         coords = [(0, 0), (scaled_base, 0), (self.ratio_h_div * scaled_base, scaled_height)]
-        GUI.draw_polygon(self, coords, self.fill_colour, self.outline_colour, scale)
+        GUI.draw_polygon(self, coords, scale)
         pass
 
 class ConvexQuadrilateral(ConvexPolygon):
@@ -94,6 +95,24 @@ class ConvexQuadrilateral(ConvexPolygon):
 
         return side_a + side_b + side_c + side_d
 
+    def draw(self, scale=1):
+        scaled_diag1 = self.len_diag1 * scale
+        scaled_diag2 = self.len_diag2 * scale
+        points = list()
+        point_a = (0,0)
+        point_b = GUI.get_rotated_point(0, scaled_diag2 * self.ratio_intersect_diag2,
+                                        (math.pi/2) - self.angle_btwn_diagonals)
+        point_c = (scaled_diag1, 0)
+        point_d = GUI.get_rotated_point(0, (-1)*(scaled_diag2 * (1-self.ratio_intersect_diag2)),
+                                        (math.pi/2) - self.angle_btwn_diagonals)
+
+        points.append(point_a)
+        points.append((point_b[0] + self.ratio_intersect_diag1 * scaled_diag1, point_b[1]))
+        points.append(point_c)
+        points.append((point_d[0] + self.ratio_intersect_diag1 * scaled_diag1, point_d[1]))
+
+        GUI.draw_polygon(self, points, scale)
+
 class RegularPentagon(ConvexPolygon):
     side = Length(name="Side of regular pentagon")
     def __init__(self, side):
@@ -105,6 +124,14 @@ class RegularPentagon(ConvexPolygon):
 
     def perimeter(self):
         return 5 * self.side
+
+    def draw(self, scale=1):
+        scaled_side = self.side * scale
+        circumcircle_radius = scaled_side * (1/math.sqrt(3 - constants.GOLDEN_RATIO))
+        points = list()
+        for i in range(5):
+            points.append(GUI.get_rotated_point(circumcircle_radius, 0, i * 0.4 * math.pi))
+        GUI.draw_polygon(self, points, scale)
 
 class RegularHexagon(ConvexPolygon):
     side = Length(name="Side of regular hexagon")
@@ -118,6 +145,13 @@ class RegularHexagon(ConvexPolygon):
 
     def perimeter(self):
         return 6 * self.side
+
+    def draw(self, scale=1):
+        scaled_side = self.side * scale
+        points = list()
+        for i in range(6):
+            points.append(GUI.get_rotated_point(scaled_side, 0, i * (math.pi / 3)))
+        GUI.draw_polygon(self, points, scale)
 
 class RegularOctagon(ConvexPolygon):
     side = Length(name="Side of regular octagon")
@@ -142,13 +176,24 @@ class EquilateralTriangle(Triangle):
         super().__init__(len_side, (len_side * math.sqrt(3)) / 2, 0.5)
 
 class Parallelogram(ConvexQuadrilateral):
-    pass
+    side_a = Length(name="Longer side of parallelogram")
+    side_b = Length(name="Shorter side of parallelogram")
+    angle_btwn_sides = Angle(name="Angle between sides")
+
+    def __init__(self, side_a, side_b, angle_btwn_sides):
+        diag1 = math.sqrt(side_a**2 + 2*side_a*side_b*math.cos(angle_btwn_sides) + side_b**2)
+        diag2 = math.sqrt(side_a**2 - 2*side_a*side_b*math.cos(angle_btwn_sides) + side_b**2)
+        angle_diag = math.acos(((diag1/2)**2 + (diag2/2)**2 - side_b**2)/(2*(diag1/2)*(diag2/2)))
+        super().__init__(diag1, diag2, 0.5, 0.5, angle_diag)
 
 class Kite(ConvexQuadrilateral):
-    pass
+    def __init__(self, len_diag1, len_diag2, diag_ratio):
+        super().__init__(len_diag1, len_diag2, diag_ratio, 0.5, math.pi/2)
 
 class Rhombus(Parallelogram):
-    pass
+    def __init__(self, side, angle):
+        super().__init__(side, side, angle)
 
 class Square(Rhombus):
-    pass
+    def __init__(self, side):
+        super().__init__(side, math.pi/2)
